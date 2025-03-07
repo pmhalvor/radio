@@ -4,5 +4,6 @@ spotipy
 notion-client
 streamlit
 pandas
+plotly
 pytest
 requests

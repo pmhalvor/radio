@@ -84,7 +84,6 @@ def footer():
     return """
     <footer>
         <ul>
-            <li><a href="mailto:pmchalvorsen@gmail.com">email</a></li>
             <li><a href="https://github.com/pmhalvor">github</a></li>
             <li><a href="https://www.linkedin.com/in/pmhalvor">linkedin</a></li>
         </ul>
