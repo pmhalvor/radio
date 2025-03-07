@@ -125,18 +125,14 @@ def get_token_first_time(code=None) -> dict:
     )
     token_info = response.json()
     print(f"Returned token info: \n {token_info}")
-
-    if "error" in token_info:
-        quit() 
-    else: 
-        breakpoint() 
     
     if "access_token" not in token_info:
+        print("No access token found")
         return {}
-    
-    # add needed key-values to token info before storing
-    token_info["timestamp"] = int(time.time())
-    token_info["token"] = token_info["access_token"]
+    else:
+        # add needed key-values to token info before storing
+        token_info["timestamp"] = int(time.time())
+        token_info["token"] = token_info["access_token"]
 
     # store for later use
     store_token(token_info)
