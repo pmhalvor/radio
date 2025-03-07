@@ -1,7 +1,7 @@
 /* BACKGROUND IMAGE */
 .body{
 	background-color: #151429;
-	background-image: url("../img/background.jpg"); /*  Need to handle image paths later */
+	background-image: url("img/background.jpg"); /*  Need to handle image paths later */
 	width: 100%;
 	height: 100%;
 	background-attachment: fixed;
