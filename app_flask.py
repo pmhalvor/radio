@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request, redirect
 from dotenv import load_dotenv
-from datetime import datetime
 from src.authorize import get_token, get_code
 from src.utils import get_current_song, get_recent_songs
 import os
@@ -20,8 +19,10 @@ def authorize():
 
 @app.route('/callback/authorized', methods=['GET'])
 def callback_authorized():
+    """
+    Redirected to after user logs in and authorizes the app.
+    """
     code = request.args.get('code', None)
-    print(f"Received code: {code}")
 
     if code:
         # Store cached code
@@ -39,19 +40,15 @@ def callback_authorized():
 
 @app.route('/callback/code', methods=['GET'])
 def callback_code():
+    """
+    Checks for local cached code and returns it if found.
+    """
     if os.path.exists(CACHE_CODE_PATH):
         with open(CACHE_CODE_PATH, 'r') as f:
             code = f.read()
         return jsonify({'message': 'Code found locally.', 'code': code}), 200
     else:
         return jsonify({'error': 'No code found locally.'}), 404
-
-
-@app.route('/callback/token', methods=['GET'])
-def callback_token():
-    token = request.args.get('token', None)
-    print(f"Received token: {token}")
-    return "Token callback"
 
 
 @app.route('/cache/clear', methods=['GET'])
