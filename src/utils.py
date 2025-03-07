@@ -38,11 +38,11 @@ def get_current_song(token):
                 album_art_url = current_track['item']['album']['images'][0]['url']
                 cache["current_song"] = {"artist": artist_name, "track": track_name, "album_art": album_art_url}
             else:
-                cache["current_song"] = {"artist": "Not Playing", "track": "N/A", "album_art": "https://via.placeholder.com/150"}
+                cache["current_song"] = {"artist": "Not Playing", "track": "N/A", "album_art": "static/img/empty_album.png"}
             last_updated["current_song"] = datetime.now()
         except Exception as e:
             print(f"Error fetching current song from Spotify: {e}")
-            cache["current_song"] =  {"artist": "Error", "track": "N/A", "album_art": "https://via.placeholder.com/150"}
+            cache["current_song"] =  {"artist": "Error", "track": "N/A", "album_art": "static/img/empty_album.png"}
             last_updated["current_song"] = datetime.now() #Still update the time, even if there is an error
     return cache["current_song"]
 
