@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, redirect
 from dotenv import load_dotenv
 from src.authorize import get_token, get_code
-from src.utils import get_current_song, get_recent_songs
+from src.spotify import get_current_song, get_recent_songs
 import os
 
 # Load environment variables
@@ -65,6 +65,8 @@ def api_current_song():
     token = get_token()
     if not token:
         return redirect('/authorize')
+    
+    get_current_song(token)
     return jsonify(get_current_song(token))
 
 
@@ -73,6 +75,7 @@ def api_recent_songs():
     token = get_token()
     if not token:
         return redirect('/authorize')
+    
     return jsonify(get_recent_songs(token))
 
 

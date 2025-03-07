@@ -37,7 +37,7 @@ def parse_current(data = None) -> dict:
     
     elif data and (data.get("currently_playing_type") == "episode"):
         url	 = 'https://www.spotify.com' 
-        artwork  = '/media/img/empty_album.png'
+        artwork  = 'local/static/img/empty_album.png'  # TODO: change to podcast artwork
         track    = 'playing a podcast'
         artist   = ''
         duration = -1 
@@ -45,7 +45,7 @@ def parse_current(data = None) -> dict:
     
     else:
         url	 = 'https://www.spotify.com' 
-        artwork  = '/media/img/empty_album.png'
+        artwork  = 'local/static/img/empty_album.png'
         track    = 'nothing playing'
         artist   = ''
         duration = -1 
