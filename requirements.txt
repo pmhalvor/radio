@@ -1,0 +1,7 @@
+flask
+python-dotenv
+spotipy
+notion-client
+streamlit
+pandas
+pytest

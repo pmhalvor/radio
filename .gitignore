@@ -1,0 +1,9 @@
+# local stuff
+.env
+.venv/
+
+
+
+# python stuff
+*.pyc
+__pycache__/

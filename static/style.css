@@ -1,0 +1,100 @@
+/* BACKGROUND IMAGE */
+body{
+	background-color: #151429;
+	background-image: url("../img/background.jpg"); /*  Need to handle image paths later */
+	width: 100%;
+	height: 100%;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: repeat;
+	background-size: cover;
+	overflow-x: hidden;
+    color: white; /*  Default text color */
+    font-family:'Source Sans Pro', sans-serif;
+}
+.container{
+    background-color: rgba(37,37,37,0.8); /*  Added some transparency */
+    border-radius: 13px;
+    margin-left: 15px;
+    margin-right: 25px;
+    margin-top: 50px;
+    padding: 2%;
+    text-align: center;
+}
+
+/* HEADERS */
+h1{
+    font-family: 'Poppins', sans-serif;
+    text-shadow: -0.05em 0.05em rgb(158, 168, 218), -0.1em 0.1em rgb(84, 96, 230), -0.15em 0.15em rgb(29, 43, 197), -0.2em 0.2em rgb(7, 16, 118);
+    font-size: 7em;
+    font-weight: 900;
+    text-align: right;
+    font-style: italic;
+    margin-top: -5%;
+}
+h2{
+    text-align: left;
+	font-style: italic;
+	font-family: 'Poppins', sans-serif;
+    text-shadow: -0.1em 0.1em rgb(84, 96, 230), -0.2em 0.2em rgb(7, 16, 118);
+    font-size: 2em;
+    font-weight: 700;
+}
+h3{
+	color: white;
+    text-shadow: -0.075em 0.075em rgb(7, 16, 118);
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.5em;
+	font-weight: 700;
+	font-style: italic;
+	text-align: center;
+}
+
+/* NAV BAR & FOOTER */
+nav{
+	position: sticky;
+	top: 0%;
+	background: linear-gradient(to top, black, #202021, black);
+	margin-top: -45px;
+	margin-left: -10px;
+    margin-right: -10px;
+	z-index: 5;;
+}
+nav ul, footer ul {
+    font-family:'Source Sans Pro', sans-serif;
+	font-weight: 700;
+    list-style: none;
+	text-align: left;
+}
+nav ul li, footer ul li {
+    display: inline;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+nav ul li a{
+	text-decoration: none;
+	color: grey;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 20px;
+	font-weight: 900;
+	align-items: center;
+}
+nav ul li a:hover {
+	background: linear-gradient(to top, rgb(183, 202, 182), #74afb5, rgb(183, 202, 182));
+	border-radius: 7px;;
+	color: black;
+}
+footer {
+    background-color: black;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+footer ul {
+    text-align: center;
+}

@@ -1,0 +1,29 @@
+services:
+  new_home:
+    build:
+      context: .
+      dockerfile: Dockerfile.home
+    container_name: new_home
+    image: ghcr.io/pmhalvor/website:latest
+    restart: always
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      DEBUG: "false"
+    platform: linux/amd64
+
+  # new_radio:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile.radio
+  #   container_name: new_radio
+  #   restart: always
+  #   ports:
+  #     - "5002:5002"
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     DEBUG: "false"
+  #   platform: linux/amd64
