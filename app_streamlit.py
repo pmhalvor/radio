@@ -2,17 +2,13 @@ import streamlit as st
 import requests
 from src.utils import navbar, footer
 
-import streamlit as st
-import requests
-from src.utils import navbar, footer
-
 # Base URL for the Flask API (adjust if needed)
-BASE_URL = 'http://127.0.0.1:5001/api'
+BASE_URL = 'http://127.0.0.1:8888/api'
 
 st.set_page_config(layout="wide")
 
 # Load CSS
-with open("style.css") as f:
+with open("static/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 

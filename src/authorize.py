@@ -1,10 +1,19 @@
-import base64, logging, io, json, os, requests, six, time
+import base64
+import json
+import os
+import requests
+import six
+import time
+import urllib.parse
+import webbrowser
+
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
 DATAPATH = '.data'
+PORT = 8888
 
 # Authorization for Spotify
 def get_token() -> str:
@@ -38,15 +47,20 @@ def get_cache_token() -> dict:
         with open(path, 'r') as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        data = {}
+        data = get_token_first_time()
 
-    payload = {
-        "refresh_token": data.get("refresh_token", None),
-        "timestamp": data.get("timestamp", None),
-        "token": data.get("token", None),
-    }
+    return data
+    # payload = {
+    #     "refresh_token": data.get("refresh_token", None),
+    #     "timestamp": data.get("timestamp", None),
+    #     "token": data.get("token", None),
+    #     "scope": data.get("scope", None),
+    #     "expires_in": data.get("expires_in", None),
+    #     "token_type": data.get("token_type", None),
+    #     "access_token": data.get("access_token", None),
+    # }
 
-    return payload
+    # return payload
 
 
 # Check if cached token is still valid
@@ -102,21 +116,21 @@ def refresh_access_token(refresh_token) -> dict:
     token_info = response.json()
 
     print(f"Returned token info: \n {token_info}")
-    # Handle cases where refresh token might be missing
-    returned_refresh_token = token_info.get("refresh_token", refresh_token)
-    if "access_token" not in token_info:
-        return {}
+    # # Handle cases where refresh token might be missing
+    # returned_refresh_token = token_info.get("refresh_token", refresh_token)
+    # if "access_token" not in token_info:
+    #     return {}
 
-    payload = {
-        "refresh_token": returned_refresh_token,
-        "token": token_info["access_token"],
-        "timestamp": int(time.time())
-    }
+    # # payload = {  # TODO check behavior on refresh token
+    # #     "refresh_token": returned_refresh_token,
+    # #     "token": token_info["access_token"],
+    # #     "timestamp": int(time.time())
+    # # }
 
     # store tokens for later
-    store_renewed_token(payload)
+    store_renewed_token(token_info)
 
-    return payload
+    return token_info
 
 
 # Make header for token request
@@ -140,7 +154,7 @@ def store_renewed_token(token_info):
 
 
 # Get first token with access code
-def get_token_first_time(code) -> dict:
+def get_token_first_time(code=None) -> dict:
     '''
     Steps:
         X set correct payload (refresh_token)
@@ -150,11 +164,15 @@ def get_token_first_time(code) -> dict:
         X update token_info in FileShare cache
         X return token info
     '''
+    
+    if not code:
+        code = get_code()
+    
     # parameters for post request
     OAUTH_TOKEN_URL = "https://accounts.spotify.com/api/token"
     PAYLOAD = {
         'grant_type': 'authorization_code',
-        'redirect_uri': 'http://localhost:5001/callback',  # Flask callback URL
+        'redirect_uri': f'http://localhost:{PORT}/callback/authorized',  # defined in Spotify Developer Dashboard
         'code': code,
     }
     HEADERS = make_headers()
@@ -166,7 +184,16 @@ def get_token_first_time(code) -> dict:
         headers=HEADERS
     )
     token_info = response.json()
+    print(f"Returned token info: \n {token_info}")
 
+    if "error" in token_info:
+        quit() 
+    else: 
+        breakpoint() 
+    
+    if "access_token" not in token_info:
+        return {}
+    
     # add needed key-values to token info before storing
     token_info["timestamp"] = int(time.time())
     token_info["token"] = token_info["access_token"]
@@ -188,14 +215,32 @@ def get_code_url():
     PAYLOAD = {
         'client_id': os.environ.get('SPOTIFY_CLIENT_ID'),
         'scope': 'user-read-currently-playing user-read-recently-played',
-        'redirect_uri': 'http://localhost:5001/callback', # Flask callback URL
+        'redirect_uri': f'http://localhost:{PORT}/callback/authorized',  # defined in Spotify Developer Dashboard
         'response_type': 'code'
     }
-    import urllib.parse
-    return f"{OAUTH_TOKEN_URL}?{urllib.parse.urlencode(PAYLOAD)}"
+    authorization_url = f"{OAUTH_TOKEN_URL}?{urllib.parse.urlencode(PAYLOAD)}"
+    return authorization_url
+
+
+def get_code():
+    authorization_url = get_code_url()
+    webbrowser.open(authorization_url, 2)  # open browser to get code
+
+    code = None 
+    counter = 0
+    while code is None:
+        code = requests.get(f'http://localhost:{PORT}/callback/code').json().get('code', None)
+        
+        time.sleep(1)
+        counter += 1
+        if counter > 5:  # TODO: # wait up to 10 seconds
+            break
+        
+    requests.get(f'http://localhost:{PORT}/cache/clear')  # clean up credentials
+    
+    return code
 
 
 if __name__ == "__main__":
-    print(get_code_url())
-    print(get_cache_token())
+    # print(get_code())
     print(get_token())
