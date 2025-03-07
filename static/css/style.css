@@ -1,5 +1,5 @@
 /* BACKGROUND IMAGE */
-body{
+.body{
 	background-color: #151429;
 	background-image: url("../img/background.jpg"); /*  Need to handle image paths later */
 	width: 100%;
