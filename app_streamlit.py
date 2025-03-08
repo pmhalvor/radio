@@ -5,12 +5,14 @@ import requests
 import streamlit as st
 
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 # from src.utils import footer, refresher
 
 # Base URL for the Flask API (adjust if needed)
-BASE_URL = 'http://127.0.0.1:8888/api'
+API_HOST = os.getenv("API_HOST", "127.0.0.1")
+API_PORT = os.getenv("API_PORT", "8888")
+BASE_URL = f"http://{API_HOST}:{API_PORT}/api" #'http://127.0.0.1:8888/api'
 
 st.set_page_config(
     # page_title="radio",  # not needed if embedded in webpage
@@ -30,6 +32,7 @@ st.set_page_config(
 logging.info(os.getcwd())
 logging.info(os.listdir())
 logging.info(f"local/: {os.listdir('local/')}")
+logging.info(f"local/static: {os.listdir('local/static')}")
 logging.info(f"src/:   {os.listdir('src/')}")
 
 # Load CSS
@@ -38,8 +41,12 @@ with open("local/static/style.css") as f:
 
 # st.title('radio')
 
-current_song = requests.get(f'{BASE_URL}/current').json()
-recent_songs = requests.get(f'{BASE_URL}/recents').json()
+try:
+    current_song = requests.get(f'{BASE_URL}/current').json()
+    recent_songs = requests.get(f'{BASE_URL}/recents').json()
+except Exception as e:
+    st.error(f"Error fetching data: {e}")
+
 
 # Convert recent songs to a DataFrame
 recent_songs_df = pd.DataFrame(recent_songs)

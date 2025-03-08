@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.streamlit
+    depends_on:
+      - radio_flask
     container_name: radio_streamlit
     image: ghcr.io/pmhalvor/radio_streamlit:alpha
     restart: always
@@ -30,5 +32,8 @@ services:
     env_file:
       - .env
     environment:
-      DEBUG: "false"
+      # Use the service name 'api-service' to reference the host of the API.
+      API_HOST: "radio_flask"
+      API_PORT: "8888"
+    
     platform: linux/amd64
