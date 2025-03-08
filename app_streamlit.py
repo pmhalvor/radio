@@ -23,6 +23,9 @@ st.set_page_config(
 )
 
 # Load CSS
+import os
+print(os.listdir())
+print(os.getcwd())
 with open("local/static/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
