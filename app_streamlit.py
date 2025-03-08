@@ -10,9 +10,10 @@ logging.basicConfig(level=logging.DEBUG)
 # from src.utils import footer, refresher
 
 # Base URL for the Flask API (adjust if needed)
-API_HOST = os.getenv("API_HOST", "127.0.0.1")
-API_PORT = os.getenv("API_PORT", "8888")
+API_HOST = os.environ.get("API_HOST", "radio_flask")
+API_PORT = os.environ.get("API_PORT", "8888")
 BASE_URL = f"http://{API_HOST}:{API_PORT}/api" #'http://127.0.0.1:8888/api'
+logging.info(f"BASE_URL: {BASE_URL}")
 
 st.set_page_config(
     # page_title="radio",  # not needed if embedded in webpage
