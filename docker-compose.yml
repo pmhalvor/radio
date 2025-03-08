@@ -32,8 +32,6 @@ services:
     env_file:
       - .env
     environment:
-      # Use the service name 'api-service' to reference the host of the API.
       API_HOST: "radio_flask"
       API_PORT: "8888"
-    
     platform: linux/amd64

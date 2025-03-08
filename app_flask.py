@@ -120,4 +120,4 @@ def api_recent_songs():
 
 
 if __name__ == '__main__':
-    app.run(port=os.environ.get('PORT', 8888), threaded=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT', 8888), threaded=True)
