@@ -16,16 +16,19 @@ services:
       DEBUG: "false"
     platform: linux/amd64
 
-  # new_radio:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile.radio
-  #   container_name: new_radio
-  #   restart: always
-  #   ports:
-  #     - "5002:5002"
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     DEBUG: "false"
-  #   platform: linux/amd64
+  radio_streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: radio_streamlit
+    image: ghcr.io/pmhalvor/radio_streamlit:alpha
+    restart: always
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./.token:/radio/.token
+    env_file:
+      - .env
+    environment:
+      DEBUG: "false"
+    platform: linux/amd64
