@@ -132,7 +132,7 @@ def get_token_first_time(code=None) -> dict:
         headers=HEADERS
     )
     token_info = response.json()
-    print(f"Returned token info: \n {token_info}")
+    # print(f"Returned token info: \n {token_info}")
     
     if "access_token" not in token_info:
         print("No access token found")
@@ -202,7 +202,7 @@ def refresh_access_token(refresh_token) -> dict:
     token_info["refresh_token"] = refresh_token
     token_info["token"] = token_info["access_token"]
 
-    print(f"Returned token info: \n {token_info}")
+    # print(f"Returned token info: \n {token_info}")
     # # Handle cases where refresh token might be missing
     # returned_refresh_token = token_info.get("refresh_token", refresh_token)
     # if "access_token" not in token_info:

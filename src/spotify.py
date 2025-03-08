@@ -524,7 +524,7 @@ def get_current_song(token):
     spotify_obj = spotipy.Spotify(auth=token)
     current_track = spotify_obj.current_user_playing_track()
 
-    print(json.dumps(current_track, indent=4))
+    # print(json.dumps(current_track, indent=4))
 
     if current_track is None:
         return {
@@ -558,7 +558,7 @@ def get_recent_songs(token):
 
     for i, item in enumerate(recent_tracks_query['items']):
         parsed_track = parse_track(item)
-        print(json.dumps(parsed_track, indent=4))
+        # print(json.dumps(parsed_track, indent=4))
         recent_tracks.append(parsed_track)
 
 
