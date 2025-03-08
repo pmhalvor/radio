@@ -29,8 +29,8 @@ st.set_page_config(
 
 logging.info(os.getcwd())
 logging.info(os.listdir())
-logging.info(os.listdir("local/"))
-logging.info(os.listdir("local/static"))
+logging.info(f"local/: {os.listdir('local/')}")
+logging.info(f"src/:   {os.listdir('src/')}")
 
 # Load CSS
 with open("local/static/style.css") as f:
