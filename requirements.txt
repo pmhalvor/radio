@@ -1,9 +1,10 @@
 flask
-python-dotenv
-spotipy
+gunicorn
 notion-client
-streamlit
 pandas
 plotly
 pytest
+python-dotenv
 requests
+spotipy
+streamlit

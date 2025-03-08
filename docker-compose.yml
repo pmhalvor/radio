@@ -1,13 +1,15 @@
 services:
-  new_home:
+  radio_flask:
     build:
       context: .
-      dockerfile: Dockerfile.home
-    container_name: new_home
-    image: ghcr.io/pmhalvor/website:latest
+      dockerfile: Dockerfile.flask
+    container_name: radio_flask
+    image: ghcr.io/pmhalvor/radio_flask:alpha
     restart: always
     ports:
-      - "5001:5001"
+      - "8888:8888"
+    volumes:
+      - ./.token:/radio/.token
     env_file:
       - .env
     environment:

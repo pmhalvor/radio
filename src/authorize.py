@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+CACHE_CODE_PATH = '.cache_code'
 TOKEN_FILE = '.token'
 PORT = 8888
 RETRY = 10
@@ -38,7 +39,14 @@ def get_code() -> str:
     code = None 
     counter = 0
     while code is None:
-        code = requests.get(f'http://localhost:{PORT}/callback/code').json().get('code', None)
+        # handle two different connection types
+        if os.path.exists(CACHE_CODE_PATH):
+            # inside flask server
+            with open(CACHE_CODE_PATH, 'r') as f:
+                code = f.read()
+        else:
+            # inside streamlit server
+            code = requests.get(f'http://localhost:{PORT}/callback/code').json().get('code', None)
         
         time.sleep(1)
         counter += 1
@@ -226,10 +234,14 @@ def make_headers() -> dict:
 def store_token(token_info) -> bool:
     with open(TOKEN_FILE, 'w') as f:
         json.dump(token_info, f, indent=4)
+    # if os.environ.get("SPTOFIY_TOKEN") != token_info.get("token"):
+        # os.environ["SPOTIFY_TOKEN"] = token_info.get("token")
     return True
 
 
 
 if __name__ == "__main__":
+    ### TESTING (expects app_flask.py to be running locally on port 8888)
+
     # print(get_code())
     print(get_token())
