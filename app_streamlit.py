@@ -1,7 +1,8 @@
-import streamlit as st
-import requests
+import os
 import pandas as pd
 import plotly.express as px
+import requests
+import streamlit as st
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -25,14 +26,13 @@ st.set_page_config(
     },
 )
 
-# Load CSS
-import os
-print(os.listdir())
-print(os.getcwd())
 
-logging.info(os.listdir())
 logging.info(os.getcwd())
+logging.info(os.listdir())
+logging.info(os.listdir("local/"))
+logging.info(os.listdir("local/static"))
 
+# Load CSS
 with open("local/static/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
