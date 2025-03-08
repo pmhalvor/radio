@@ -3,6 +3,9 @@ import requests
 import pandas as pd
 import plotly.express as px
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 # from src.utils import footer, refresher
 
 # Base URL for the Flask API (adjust if needed)
@@ -26,6 +29,10 @@ st.set_page_config(
 import os
 print(os.listdir())
 print(os.getcwd())
+
+logging.info(os.listdir())
+logging.info(os.getcwd())
+
 with open("local/static/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
