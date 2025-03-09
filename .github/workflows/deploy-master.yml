@@ -1,12 +1,9 @@
-name: Build and Push Docker Compose Image
+name: Build and Push Docker Compose Image (master)
 
 on:
   push:
     branches:
       - master
-      - initial*
-    tags:
-      - 'v*'   # triggers workflow for tags like "v1.0.0"
 
 jobs:
   build-and-push:
@@ -36,8 +33,12 @@ jobs:
 
       # Build the image using docker-compose (with platform option, if set in your compose file)
       - name: Build image via docker-compose
-        run: docker compose build
+        run: |
+          export TAG=latest
+          docker compose build
 
       # Push the image(s) defined in docker-compose.yml to the registry
       - name: Push image via docker-compose
-        run: docker compose push
+        run: |
+          export TAG=latest
+          docker compose push

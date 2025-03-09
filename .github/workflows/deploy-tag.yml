@@ -2,9 +2,8 @@ name: Build and Push Docker Compose Image (branch)
 
 on:
   push:
-    branches:
-      - initial*
-      # - '**'
+    tags:
+      - 'v*'   # triggers workflow for tags like "v1.0.0"
 
 jobs:
   build-and-push:
@@ -35,13 +34,13 @@ jobs:
       # Build the image using docker-compose (with platform option, if set in your compose file)
       - name: Build image via docker-compose
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo $GITHUB_REF | sed 's/refs\/heads\///')
+          TAG=$(git.ref_name || echo $GITHUB_REF | sed 's/refs\/heads\///')
           export TAG
           docker compose build
 
       # Push the image(s) defined in docker-compose.yml to the registry
       - name: Push image via docker-compose
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo $GITHUB_REF | sed 's/refs\/heads\///')
+          TAG=$(git.ref_name || echo $GITHUB_REF | sed 's/refs\/heads\///')
           export TAG
           docker compose push

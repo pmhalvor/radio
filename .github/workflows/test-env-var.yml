@@ -20,7 +20,7 @@ jobs:
           echo "API_HOST=radio_flask" >> .env
           export BRANCH=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
           export COMMIT=$(echo $GITHUB_SHA | cut -c1-7)
-          export TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo $GITHUB_REF | sed 's/refs\/heads\///')
+          export TAG=$(git.ref_name || echo $GITHUB_REF | sed 's/refs\/heads\///')
           echo "TAG=$TAG" >> .env
           echo "$TAG"
 
