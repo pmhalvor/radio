@@ -1,4 +1,4 @@
-name: Build and Push Docker Compose Image (branch)
+name: Build and Push Docker Compose Image (tag)
 
 on:
   push:
