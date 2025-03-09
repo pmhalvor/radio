@@ -14,3 +14,6 @@ docker-flask:
 docker-flask-stop:
 	docker ps | grep radio_flask | xargs docker stop
 	# docker stop $(docker ps -a -q --filter ancestor=radio_flask:alpha)
+
+test:
+	python3 -m pytest tests/

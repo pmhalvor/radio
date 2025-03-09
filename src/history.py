@@ -8,8 +8,6 @@ from spotify import get_current_song, get_recent_songs, get_tracks
 
 MAX_ID_COUNT=50
 
-assert os.path.exists('../../data/history.csv')
-
 
 def load_df(cleaned=False, end=False) -> pd.DataFrame:
 
@@ -171,6 +169,8 @@ def get_durations(id_list = [], token=None, store=True):
 
 def run() -> bool:
     logging.info('Running song-history run() function.')
+    assert os.path.exists('../../data/history.csv'), 'No history.csv file found.'
+
     token = get_token()
     data = get_recent_songs(token=token)
     print("Recents: ", len(data))
