@@ -5,10 +5,10 @@ div.stMainBlockContainer{
 	color: #FAFAFA;
 	font-size: 1.5em;
 	text-align: center;
-	margin-top: -5%;
+	margin-top: -50px;
 }
 div.stHorizontalBlock{
-	margin-bottom: -1%;
+	margin-bottom: -20px;
 }
 svg{
 	border-radius: 10px;
