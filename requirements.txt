@@ -4,7 +4,9 @@ notion-client
 pandas
 plotly
 pytest
+pytest-mock
 python-dotenv
+pyyaml
 requests
 spotipy
 streamlit

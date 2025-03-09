@@ -1,4 +1,3 @@
-import json
 import spotipy
 import datetime as dt 
 import logging
@@ -7,9 +6,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 from dotenv import load_dotenv
 
-
 # Load environment variables
 load_dotenv()
+
 
 def parse_track(track):
     _ = {     # track_format
@@ -211,6 +210,12 @@ def get_recent_songs(token):
 
 
     return recent_tracks
+
+
+def get_tracks(token=None, batch_id_str=None) -> dict:
+    spotify_obj = spotipy.Spotify(auth=token)
+    tracks = spotify_obj.tracks(batch_id_str.split(','))
+    return tracks.get('tracks', {})
 
 
 if __name__ == '__main__':
