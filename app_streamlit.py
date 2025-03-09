@@ -33,6 +33,14 @@ st.set_page_config(
 # Load CSS
 with open("local/static/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+st.markdown((
+        "<script "
+        'src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child" '\
+        'type="text/javascript"' 
+        "async></script>"
+    ), 
+    unsafe_allow_html=True
+)
 
 # st.title('radio')
 

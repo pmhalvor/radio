@@ -1,7 +1,9 @@
 /* GENERAL */
-div.stMainBlockContainer{
+div.stApp{
 	background-color: #0E1117;
 	background-image: url("https://perhalvorsen.com/static/img/background.jpg"); /*hardcoded to override streamlit coloring*/
+}
+div.stMainBlockContainer{
 	color: #FAFAFA;
 	font-size: 1.5em;
 	text-align: center;
