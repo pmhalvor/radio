@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import requests
 import streamlit as st
+import time
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -25,16 +26,9 @@ st.set_page_config(
         "Report a bug": "https://github.com/pmhalvor/radio/issues",
         "About": "A Spotify webapp that display current and recent songs, "\
             "as well as some historical plots (if present). "\
-            "See https://perhalvorsen.com/radio for a live example."
+            "See https://perhalvorsen.com/radio-app for a live example."
     },
 )
-
-
-logging.info(os.getcwd())
-logging.info(os.listdir())
-logging.info(f"local/: {os.listdir('local/')}")
-logging.info(f"local/static: {os.listdir('local/static')}")
-logging.info(f"src/:   {os.listdir('src/')}")
 
 # Load CSS
 with open("local/static/style.css") as f:
@@ -42,11 +36,20 @@ with open("local/static/style.css") as f:
 
 # st.title('radio')
 
-try:
-    current_song = requests.get(f'{BASE_URL}/current').json()
-    recent_songs = requests.get(f'{BASE_URL}/recents').json()
-except Exception as e:
-    st.error(f"Error fetching data: {e}")
+current_song = None
+recent_songs = None
+counter = 0
+while (current_song, recent_songs) == (None, None):
+    try:
+        current_song = requests.get(f'{BASE_URL}/current').json()
+        recent_songs = requests.get(f'{BASE_URL}/recents').json()
+    except Exception as e:
+        st.error(f"Error fetching data: {e}")
+
+    counter += 1
+    time.sleep(1)
+    if counter > 10:
+        break
 
 
 # Convert recent songs to a DataFrame
@@ -147,6 +150,10 @@ with st.container():
                     tickvals=[],
                     ticktext=[],
                 )
+            )
+            fig.update_layout(
+                plot_bgcolor = "rgb(0, 7, 30)",
+                paper_bgcolor = "rgb(0, 7, 30)",
             )
 
             # show plot
