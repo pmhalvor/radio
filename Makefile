@@ -1,5 +1,8 @@
 run:
-	python app.py & streamlit run app_streamli.py
+	python app.py & streamlit run app_streamlit.py
+
+run-streamlit:
+	export API_HOST=0.0.0.0 && streamlit run app_streamlit.py
 
 run-flask:
 	python app.py
