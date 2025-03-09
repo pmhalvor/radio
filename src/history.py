@@ -8,16 +8,16 @@ from spotify import get_current_song, get_recent_songs, get_tracks
 
 MAX_ID_COUNT=50
 
-assert os.path.exists('../data/history.csv')
+assert os.path.exists('../../data/history.csv')
 
 
 def load_df(cleaned=False, end=False) -> pd.DataFrame:
 
     suffix = "_cleaned" if cleaned else ""
 
-    if os.path.exists(f'../data/history{suffix}.csv'):
-        df = pd.read_csv(f'../data/history{suffix}.csv')
-        print("loaded from", f'../data/history{suffix}.csv')
+    if os.path.exists(f'../../data/history{suffix}.csv'):
+        df = pd.read_csv(f'../../data/history{suffix}.csv')
+        print("loaded from", f'../../data/history{suffix}.csv')
     else:
         df = pd.read_csv(f'~/data/history{suffix}.csv')
         print("loaded from", f'~/data/history{suffix}.csv')
@@ -86,9 +86,9 @@ def combine_dfs(csv_df=None, new_df=None) -> pd.DataFrame:
 
 def df_to_csv(df=None) -> str:
     try:
-        if os.path.exists('../data/history.csv'):
+        if os.path.exists('../../data/history.csv'):
 
-            csv_str = df.to_csv('../data/history.csv', index=False)
+            csv_str = df.to_csv('../../data/history.csv', index=False)
         else:
             csv_str = df.to_csv('~/data/history.csv', index=False)
 
