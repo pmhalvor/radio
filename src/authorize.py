@@ -187,9 +187,6 @@ def refresh_access_token(refresh_token) -> dict:
         headers=HEADERS
     )
     token_info = response.json()
-
-    breakpoint()
-
     token_info["timestamp"] = int(time.time())
     token_info["refresh_token"] = refresh_token
     token_info["token"] = token_info["access_token"]
@@ -218,9 +215,8 @@ def store_token(token_info) -> bool:
     return True
 
 
-
 if __name__ == "__main__":
-    ### TESTING (expects app_flask.py to be running locally on port 8888)
+    # local run expects app_flask.py to be running on localhost:8888
 
     # print(get_code())
     print(get_token())
