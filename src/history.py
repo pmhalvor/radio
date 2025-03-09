@@ -6,18 +6,18 @@ import os
 from authorize import get_token 
 from spotify import get_current_song, get_recent_songs, get_tracks
 
-ROOT = os.environ.get("ROOT")
 MAX_ID_COUNT=50
 
-def load_df(root=None, cleaned=False, end=False) -> pd.DataFrame:
-    if root is None:
-        root = ROOT
+assert os.path.exists('../data/history.csv')
+
+
+def load_df(cleaned=False, end=False) -> pd.DataFrame:
 
     suffix = "_cleaned" if cleaned else ""
 
-    if os.path.exists(f'{root}/data/history{suffix}.csv'):
-        df = pd.read_csv(f'{root}/data/history{suffix}.csv')
-        print("loaded from", f'{root}/data/history{suffix}.csv')
+    if os.path.exists(f'../data/history{suffix}.csv'):
+        df = pd.read_csv(f'../data/history{suffix}.csv')
+        print("loaded from", f'../data/history{suffix}.csv')
     else:
         df = pd.read_csv(f'~/data/history{suffix}.csv')
         print("loaded from", f'~/data/history{suffix}.csv')
@@ -26,8 +26,9 @@ def load_df(root=None, cleaned=False, end=False) -> pd.DataFrame:
 
     # get cleaned if current df is dirty
     if not end:
+        # TODO clean this 
         if ("<<<<<<" in max_played_at) or (">>>>>>>" in max(df["played_at"])) or ("=======" in max(df["played_at"])):
-            df, max_played_at = load_df(root, cleaned=True, end=True)  # break any recursivity
+            df, max_played_at = load_df(cleaned=True, end=True)  # break any recursivity
     else:
         print("Ending due to recursive call. Check that history_cleaned.csv really is clean... ")
 
@@ -85,9 +86,9 @@ def combine_dfs(csv_df=None, new_df=None) -> pd.DataFrame:
 
 def df_to_csv(df=None) -> str:
     try:
-        if os.path.exists(f'{ROOT}/data/history.csv'):
+        if os.path.exists('../data/history.csv'):
 
-            csv_str = df.to_csv(f'{ROOT}/data/history.csv', index=False)
+            csv_str = df.to_csv('../data/history.csv', index=False)
         else:
             csv_str = df.to_csv('~/data/history.csv', index=False)
 
@@ -104,7 +105,7 @@ def get_durations(id_list = [], token=None, store=True):
     Should both load the previously stored duraitons and join with new durations.
 
     """
-    pth = os.path.join(ROOT, "data", 'durations.csv')
+    pth = os.path.join('..', "data", 'durations.csv')
 
     # load durations pickle
     # with open(pth, 'rb') as f:
@@ -156,7 +157,7 @@ def get_durations(id_list = [], token=None, store=True):
                         "batch_ids_str": batch_id_str
                     }
                 }
-                with open(os.path.join(ROOT, 'durations_error_response.json'), 'w+') as f:
+                with open(os.path.join('..', 'durations_error_response.json'), 'w+') as f:
                     json.dump(data, f)
 
         # this only gets stored again when new ids are added
