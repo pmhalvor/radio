@@ -1,11 +1,10 @@
-import json
 import spotipy
 
 from dotenv import load_dotenv
 
-
 # Load environment variables
 load_dotenv()
+
 
 def parse_track(track):
     _ = {     # track_format
