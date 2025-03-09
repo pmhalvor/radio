@@ -90,17 +90,6 @@ def get_cache_token() -> dict:
         data = get_token_first_time()
 
     return data
-    # payload = {
-    #     "refresh_token": data.get("refresh_token", None),
-    #     "timestamp": data.get("timestamp", None),
-    #     "token": data.get("token", None),
-    #     "scope": data.get("scope", None),
-    #     "expires_in": data.get("expires_in", None),
-    #     "token_type": data.get("token_type", None),
-    #     "access_token": data.get("access_token", None),
-    # }
-
-    # return payload
 
 
 def get_token_first_time(code=None) -> dict:
@@ -202,18 +191,6 @@ def refresh_access_token(refresh_token) -> dict:
     token_info["refresh_token"] = refresh_token
     token_info["token"] = token_info["access_token"]
 
-    # print(f"Returned token info: \n {token_info}")
-    # # Handle cases where refresh token might be missing
-    # returned_refresh_token = token_info.get("refresh_token", refresh_token)
-    # if "access_token" not in token_info:
-    #     return {}
-
-    # # payload = {  # TODO check behavior on refresh token
-    # #     "refresh_token": returned_refresh_token,
-    # #     "token": token_info["access_token"],
-    # #     "timestamp": int(time.time())
-    # # }
-
     # store tokens for later
     store_token(token_info)
 
@@ -234,8 +211,7 @@ def make_headers() -> dict:
 def store_token(token_info) -> bool:
     with open(TOKEN_FILE, 'w') as f:
         json.dump(token_info, f, indent=4)
-    # if os.environ.get("SPTOFIY_TOKEN") != token_info.get("token"):
-        # os.environ["SPOTIFY_TOKEN"] = token_info.get("token")
+
     return True
 
 
