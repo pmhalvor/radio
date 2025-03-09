@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - initial*
-
+    tags:
+      - 'v*'
 jobs:
   test:
     runs-on: ubuntu-latest
