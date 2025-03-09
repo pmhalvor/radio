@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.flask
     container_name: radio_flask
-    image: ghcr.io/pmhalvor/radio_flask:alpha
+    image: ghcr.io/pmhalvor/radio_flask:${TAG}
     restart: always
     ports:
       - "8888:8888"
@@ -23,7 +23,7 @@ services:
     depends_on:
       - radio_flask
     container_name: radio_streamlit
-    image: ghcr.io/pmhalvor/radio_streamlit:alpha
+    image: ghcr.io/pmhalvor/radio_streamlit:${TAG}
     restart: always
     ports:
       - "8501:8501"
