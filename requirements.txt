@@ -5,7 +5,7 @@ pandas
 plotly
 pytest
 python-dotenv
+pyyaml
 requests
 spotipy
 streamlit
-yaml

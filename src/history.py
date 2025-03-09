@@ -1,17 +1,14 @@
-import datetime as dt
 import json
 import logging
 import pandas as pd 
-import requests as r
 import os 
 
 from authorize import get_token 
-from spotify import get_current_song, get_recent_songs
+from spotify import get_current_song, get_recent_songs, get_tracks
 
 ROOT = os.environ.get("ROOT")
 MAX_ID_COUNT=50
 
-####### DATA WRANGLING #############
 def load_df(root=None, cleaned=False, end=False) -> pd.DataFrame:
     if root is None:
         root = ROOT
@@ -38,7 +35,6 @@ def load_df(root=None, cleaned=False, end=False) -> pd.DataFrame:
     return df, max_played_at
 
 
-# Convert json data to dataframe
 def json_to_df(data=None, latest=None) -> pd.DataFrame:
     '''
     typical josn data format:
@@ -81,14 +77,12 @@ def json_to_df(data=None, latest=None) -> pd.DataFrame:
     return new_entries
 
 
-# Combine dataframes
 def combine_dfs(csv_df=None, new_df=None) -> pd.DataFrame:
     if new_df.size == 0:
         return csv_df
     return pd.concat((csv_df, new_df), ignore_index=True).reset_index(drop=True)
 
 
-# Convert dataframe to csv
 def df_to_csv(df=None) -> str:
     try:
         if os.path.exists(f'{ROOT}/data/history.csv'):
@@ -98,30 +92,15 @@ def df_to_csv(df=None) -> str:
             csv_str = df.to_csv('~/data/history.csv', index=False)
 
         return csv_str
-    except:
+    except Exception as e:
+        logging.error(f'Error saving csv: {e}')
+        print(f'Error saving csv: {e}')
         return df
-#####################################
-
-
-#####    API CALLS     ##############
-# Get list of tracks from ids
-def get_tracks(token=None, batch_id_str=None) -> dict:
-    tracks = {}
-
-    URL = "https://api.spotify.com/v1/tracks"    # api-endpoint for recently played  
-    HEAD = {'Authorization': 'Bearer '+token}    # provide auth. crendtials
-    PARAMS = {'ids': batch_id_str}
-
-    data = r.get(url=URL, headers=HEAD, params=PARAMS).json()
-
-    if data.get("tracks") is not None:
-        tracks = data['tracks']
-
-    return tracks
 
 
 def get_durations(id_list = [], token=None, store=True):
     """
+    TODO Move to spotify.py
     Should both load the previously stored duraitons and join with new durations.
 
     """
@@ -145,8 +124,8 @@ def get_durations(id_list = [], token=None, store=True):
 
     print(f'{len(missing_ids)} new ids to check')
     if len(missing_ids) > 0:
-        if not token:
-            token = get_token()
+        # if not token:
+        #     token = get_token()
 
         batches = (len(missing_ids)//MAX_ID_COUNT) + 1
         print(f'Will be executing {batches} API call(s)')
@@ -188,10 +167,7 @@ def get_durations(id_list = [], token=None, store=True):
 
     return durations
 
-#####################################
 
-####   OTHER TOOLS    #####
-# Run all steps from this file
 def run() -> bool:
     logging.info('Running song-history run() function.')
     token = get_token()
@@ -216,8 +192,6 @@ def print_current():
     token = get_token()
     data = get_current_song(token=token)
     print(data)
-
-###########################
 
 
 if __name__=='__main__':
