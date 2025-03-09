@@ -34,13 +34,13 @@ jobs:
       # Build the image using docker-compose (with platform option, if set in your compose file)
       - name: Build image via docker-compose
         run: |
-          TAG=$(git.ref_name || echo $GITHUB_REF | sed 's/refs\/heads\///')
+          TAG=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
           export TAG
           docker compose build
 
       # Push the image(s) defined in docker-compose.yml to the registry
       - name: Push image via docker-compose
         run: |
-          TAG=$(git.ref_name || echo $GITHUB_REF | sed 's/refs\/heads\///')
+          TAG=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
           export TAG
           docker compose push
