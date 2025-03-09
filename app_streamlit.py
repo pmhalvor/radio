@@ -160,6 +160,9 @@ with st.container():
     unique_albums = recent_songs_df.drop_duplicates(subset=['album_art'])
 
     album_images = unique_albums['album_art'].tolist()
+    track_url = unique_albums['url'].tolist()
+
+    album_url_list = [{"album":album, "url":url} for album, url in zip(album_images, track_url)]
 
     # Create a horizontal scrollable container
     scrollable_container = st.container()
@@ -193,8 +196,11 @@ with st.container():
     )
 
     html_str = '<div class="row">'
-    for album_art in album_images:
-        html_str += f'<img src="{album_art}" width="250px"/>'
+    for album_url_dict in album_url_list:
+        html_str += \
+            f'<a href="{album_url_dict["url"]}" >' \
+            f'<img src="{album_url_dict["album"]}" width="250px"/>' \
+            '</a>' 
     html_str += '</div>'
     scrollable_container.markdown(html_str, unsafe_allow_html=True)
 
