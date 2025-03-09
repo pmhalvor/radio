@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+WORKDIR /radio
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ ./src/
+COPY local/ ./local/
+COPY app_streamlit.py ./
+
+ARG PORT=8501
+ENV PORT=${PORT}
+
+EXPOSE ${PORT}
+
+CMD ["sh", "-c", "streamlit run app_streamlit.py --server.port ${PORT}"]

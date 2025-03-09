@@ -1,0 +1,20 @@
+FROM python:3.11-slim
+
+WORKDIR /radio
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/* ./src/
+COPY local/* ./local/
+COPY app_flask.py ./
+# COPY .token ./.token # hide secrets from image
+# COPY .env ./.env
+
+ENV FLASK_ENV=production
+ARG PORT=8888
+ENV PORT=${PORT}
+
+EXPOSE ${PORT}
+
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT} app_flask:app"]

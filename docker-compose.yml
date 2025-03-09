@@ -1,29 +1,37 @@
 services:
-  new_home:
+  radio_flask:
     build:
       context: .
-      dockerfile: Dockerfile.home
-    container_name: new_home
-    image: ghcr.io/pmhalvor/website:latest
+      dockerfile: Dockerfile.flask
+    container_name: radio_flask
+    image: ghcr.io/pmhalvor/radio_flask:${TAG}
     restart: always
     ports:
-      - "5001:5001"
+      - "8888:8888"
+    volumes:
+      - ./.token:/radio/.token
     env_file:
       - .env
     environment:
       DEBUG: "false"
     platform: linux/amd64
 
-  # new_radio:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile.radio
-  #   container_name: new_radio
-  #   restart: always
-  #   ports:
-  #     - "5002:5002"
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     DEBUG: "false"
-  #   platform: linux/amd64
+  radio_streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    depends_on:
+      - radio_flask
+    container_name: radio_streamlit
+    image: ghcr.io/pmhalvor/radio_streamlit:${TAG}
+    restart: always
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./.token:/radio/.token
+    env_file:
+      - .env
+    environment:
+      API_HOST: "radio_flask"
+      API_PORT: "8888"
+    platform: linux/amd64

@@ -1,0 +1,42 @@
+/* GENERAL */
+div.stApp{
+	background-color: #0E1117;
+	background-image: url("https://perhalvorsen.com/static/img/background.jpg"); /*hardcoded to override streamlit coloring*/
+}
+div.stMainBlockContainer{
+	color: #FAFAFA;
+	font-size: 1.5em;
+	text-align: center;
+	margin-top: -50px;
+}
+div.stHorizontalBlock{
+	margin-bottom: -20px;
+}
+svg{
+	border-radius: 10px;
+}
+header.stAppHeader{
+	background: linear-gradient(to bottom, rgb(0, 7, 30), rgb(0, 13, 70), rgb(0, 7, 30));
+	color: #FAFAFA;
+}
+
+/* TITLES */
+h1{
+    text-shadow: -0.05em 0.05em rgb(158, 168, 218), -0.1em 0.1em rgb(84, 96, 230), -0.15em 0.15em rgb(29, 43, 197), -0.2em 0.2em rgb(7, 16, 118);
+    font-size: 7em;
+    text-align: right;
+	font-style: italic;
+}
+h2{
+    text-align: left;
+	font-style: italic;
+    text-shadow: -0.05em 0.05em rgb(84, 96, 230), -0.1em 0.1em rgb(7, 16, 118);
+    font-size: 2em;
+}
+h3{
+	color: white;
+    text-shadow: -0.075em 0.075em rgb(7, 16, 118);
+	font-size: 1.5em;
+	font-style: italic ;
+	text-align: center;
+}
