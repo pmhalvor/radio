@@ -1,0 +1,27 @@
+name: Test Environment Variables
+
+on:
+  push:
+    branches:
+      - initial*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set env vars
+        run: |
+          echo "DEBUG=true" >> .env
+          echo "API_HOST=radio_flask" >> .env
+          export TAG=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+          echo "TAG=$TAG" >> .env
+          echo "$TAG"
+
+      - name: Show env vars
+        run: |
+          cat .env
+          echo "$TAG"
