@@ -198,6 +198,9 @@ def refresh_access_token(refresh_token) -> dict:
         headers=HEADERS
     )
     token_info = response.json()
+
+    breakpoint()
+
     token_info["timestamp"] = int(time.time())
     token_info["refresh_token"] = refresh_token
     token_info["token"] = token_info["access_token"]
