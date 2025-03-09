@@ -17,7 +17,12 @@ jobs:
         run: |
           echo "DEBUG=true" >> .env
           echo "API_HOST=radio_flask" >> .env
-          export TAG=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+          export BRANCH=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+          export COMMIT=$(echo $GITHUB_SHA | cut -c1-7)
+          export TAG=$BRANCH-$COMMIT
+          
+      - name: Write exported env vars to .env
+        run: |
           echo "TAG=$TAG" >> .env
           echo "$TAG"
 
