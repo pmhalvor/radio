@@ -1,16 +1,12 @@
-import os
+import logging
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import time
 
 from src.spotify import get_current_song, get_recent_songs
 from src.authorize import authorize_or_get_token
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# from src.utils import footer, refresher
+logging.basicConfig(level=logging.INFO)
 
 st.set_page_config(
     # page_title="radio",  # not needed if embedded in webpage
@@ -37,8 +33,6 @@ st.markdown((
     ), 
     unsafe_allow_html=True
 )
-
-# st.title('radio')
 
 # Get the token
 token = authorize_or_get_token()
