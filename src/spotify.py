@@ -170,8 +170,10 @@ def get_current_song(token):
     spotify_obj = spotipy.Spotify(auth=token)
     current_track = spotify_obj.current_user_playing_track()
 
-    # print(json.dumps(current_track, indent=4))
-    logging.info(", ".join(current_track.keys()))
+    if current_track is not None:
+        logging.info(", ".join(current_track.keys()))
+    else:
+        logging.info("No current track playing.")
 
     if current_track is None:
         return {

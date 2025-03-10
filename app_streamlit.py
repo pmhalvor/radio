@@ -125,6 +125,7 @@ with st.container():
             tab_df["played_at"] = pd.to_datetime(tab_df["played_at"])
             tab_df["played_at_numeric"] = tab_df["played_at"].astype("int64") // 10**9
             tab_df["played_at_numeric_norm"] = tab_df["played_at_numeric"] - tab_df["played_at_numeric"].min()
+            tab_df = tab_df.sort_values("played_at_numeric")
 
             fig = px.scatter(
                 tab_df,

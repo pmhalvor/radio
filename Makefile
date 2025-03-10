@@ -1,11 +1,11 @@
 run:
-	python app.py & streamlit run app_streamlit.py
+	python app_flask.py & streamlit run app_streamlit.py
 
 run-streamlit:
 	export API_HOST=0.0.0.0 && streamlit run app_streamlit.py
 
 run-flask:
-	python app.py
+	python app_flask.py
 
 docker-flask:
 	docker build -t radio_flask:alpha -f Dockerfile.flask .
