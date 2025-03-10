@@ -1,10 +1,9 @@
 import spotipy
 import datetime as dt 
 import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
 
 # Load environment variables
 load_dotenv()
