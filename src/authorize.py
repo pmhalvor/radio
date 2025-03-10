@@ -26,7 +26,7 @@ def authorize_or_get_token():
     If not found, initiates the authorization flow and returns the new token.
     """
     try:
-        token_info = get_cache_token()
+        token_info = get_token_info()
         if not is_token_expired(token_info):
             return token_info['token']
     except (FileNotFoundError, json.JSONDecodeError):
@@ -101,7 +101,7 @@ def get_code() -> str:
     return code
 
 
-def get_token() -> str:
+def get_token_info() -> str:
     '''
     Steps:
         X get token from local file ".data"
@@ -111,15 +111,15 @@ def get_token() -> str:
                 X update .data with new tokens
         X return access token
     '''
-    cache_token = get_cache_token()
+    cache_token_info = get_cache_token_info()
 
-    if is_token_expired(cache_token) or cache_token.get("token") in (None, "null"):
-        cache_token = refresh_access_token(cache_token['refresh_token'])
+    if is_token_expired(cache_token_info) or cache_token_info.get("token") in (None, "null"):
+        cache_token_info = refresh_access_token(cache_token_info['refresh_token'])
 
-    return cache_token['token']
+    return cache_token_info
 
 
-def get_cache_token() -> dict:
+def get_cache_token_info() -> dict:
     """
     Tries to load local data from TOKEN_FILE.
     If file is not found or invalid, it will try to get a new token.
