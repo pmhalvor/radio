@@ -8,6 +8,7 @@ import urllib.parse
 import webbrowser
 
 from dotenv import load_dotenv
+import subprocess
 
 # Load environment variables
 load_dotenv()
@@ -18,6 +19,36 @@ PORT = 8888
 RETRY = 10
 
 ### MAIN AUTHORIZATION FUNCTIONS
+
+def authorize_or_get_token():
+    """
+    Checks for an existing valid token. If found, returns it.
+    If not found, initiates the authorization flow and returns the new token.
+    """
+    try:
+        token_info = get_token_info()
+        if not is_token_expired(token_info):
+            return token_info['token']
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass  # Proceed to authorization flow
+
+    # Start the Flask app for authorization as a subprocess
+    flask_process = subprocess.Popen(['python', '-m', 'src.app_flask'])
+    
+    # Ensure the Flask app has time to start
+    time.sleep(2)
+
+    code = get_code()
+    if code:
+        token_info = get_token_first_time(code)
+        if token_info:
+            return token_info['token']
+
+    # Close the Flask app
+    flask_process.terminate()
+
+    return None
+
 def get_code() -> str:
     """
     Triggers authiorization flow and returns code from callback.
@@ -34,9 +65,9 @@ def get_code() -> str:
     authorization_url = f"{OAUTH_TOKEN_URL}?{urllib.parse.urlencode(PAYLOAD)}"
 
     # open browser to get authorization code
-    webbrowser.open(authorization_url, 2)  
+    webbrowser.open(authorization_url, 2)
 
-    code = None 
+    code = None
     counter = 0
     while code is None:
         # handle two different connection types
@@ -46,19 +77,31 @@ def get_code() -> str:
                 code = f.read()
         else:
             # inside streamlit server
-            code = requests.get(f'http://localhost:{PORT}/callback/code').json().get('code', None)
-        
+            try:
+                response = requests.get(f'http://localhost:{PORT}/callback/code')
+                response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+                code = response.json().get('code', None)
+            except requests.exceptions.RequestException as e:
+                print(f"Error getting code: {e}")
+                code = None
+
         time.sleep(1)
         counter += 1
-        if counter > RETRY: 
+        if counter > RETRY:
             break
-        
-    requests.get(f'http://localhost:{PORT}/cache/clear')  # clean up credentials from server
-    
+
+    try:
+        # Use a session for connection pooling
+        with requests.Session() as session:
+            response = session.get(f'http://localhost:{PORT}/cache/clear')
+            response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Error clearing cache: {e}")
+
     return code
 
 
-def get_token() -> str:
+def get_token_info() -> str:
     '''
     Steps:
         X get token from local file ".data"
@@ -68,15 +111,15 @@ def get_token() -> str:
                 X update .data with new tokens
         X return access token
     '''
-    cache_token = get_cache_token()
+    token_info = get_cache_token_info()
 
-    if is_token_expired(cache_token) or cache_token.get("token") in (None, "null"):
-        cache_token = refresh_access_token(cache_token['refresh_token'])
+    if is_token_expired(token_info) or token_info.get("token") in (None, "null"):
+        token_info = refresh_access_token(token_info['refresh_token'])
 
-    return cache_token['token']
+    return token_info
 
 
-def get_cache_token() -> dict:
+def get_cache_token_info() -> dict:
     """
     Tries to load local data from TOKEN_FILE.
     If file is not found or invalid, it will try to get a new token.
@@ -87,7 +130,7 @@ def get_cache_token() -> dict:
         with open(TOKEN_FILE, 'r') as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        data = get_token_first_time()
+        data = {} # return empty dict to trigger get_token_first_time
 
     return data
 
@@ -104,7 +147,7 @@ def get_token_first_time(code=None) -> dict:
     '''
     if not code:
         code = get_code()
-    
+
     # parameters for post request
     OAUTH_TOKEN_URL = "https://accounts.spotify.com/api/token"
     PAYLOAD = {
@@ -122,7 +165,7 @@ def get_token_first_time(code=None) -> dict:
     )
     token_info = response.json()
     # print(f"Returned token info: \n {token_info}")
-    
+
     if "access_token" not in token_info:
         print("No access token found")
         return {}
@@ -216,7 +259,4 @@ def store_token(token_info) -> bool:
 
 
 if __name__ == "__main__":
-    # local run expects app_flask.py to be running on localhost:8888
-
-    # print(get_code())
-    print(get_token())
+    print(authorize_or_get_token())

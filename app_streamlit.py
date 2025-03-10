@@ -1,20 +1,12 @@
-import os
+import logging
 import pandas as pd
 import plotly.express as px
-import requests
 import streamlit as st
-import time
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+from src.spotify import get_current_song, get_recent_songs
+from src.authorize import authorize_or_get_token
 
-# from src.utils import footer, refresher
-
-# Base URL for the Flask API (adjust if needed)
-API_HOST = os.environ.get("API_HOST", "radio_flask")
-API_PORT = os.environ.get("API_PORT", "8888")
-BASE_URL = f"http://{API_HOST}:{API_PORT}/api" #'http://127.0.0.1:8888/api'
-logging.info(f"BASE_URL: {BASE_URL}")
+logging.basicConfig(level=logging.INFO)
 
 st.set_page_config(
     # page_title="radio",  # not needed if embedded in webpage
@@ -42,26 +34,28 @@ st.markdown((
     unsafe_allow_html=True
 )
 
-# st.title('radio')
+# Get the token
+token = authorize_or_get_token()
 
 current_song = None
 recent_songs = None
-counter = 0
-while (current_song, recent_songs) == (None, None):
+
+if token:
     try:
-        current_song = requests.get(f'{BASE_URL}/current').json()
-        recent_songs = requests.get(f'{BASE_URL}/recents').json()
+        current_song = get_current_song(token)
+        recent_songs = get_recent_songs(token)
     except Exception as e:
-        st.error(f"Error fetching data: {e}")
-
-    counter += 1
-    time.sleep(1)
-    if counter > 10:
-        break
-
+        st.error(f"Error fetching data from Spotify: {e}")
+else:
+    st.error("No token available.")
+    current_song = None
+    recent_songs = None
 
 # Convert recent songs to a DataFrame
-recent_songs_df = pd.DataFrame(recent_songs)
+if recent_songs:
+    recent_songs_df = pd.DataFrame(recent_songs)
+else:
+    recent_songs_df = pd.DataFrame()
 
 # Wrap content in a container
 with st.container():
@@ -69,28 +63,20 @@ with st.container():
     # Main layout: 3 columns
     col1, col2= st.columns(
         [1, 2],
-        gap= 'large',
-        vertical_alignment='top',
+        gap="large",
+        vertical_alignment="top",
     )
 
     with col1:
-        st.header('currently playing')
-        try:
-            current_song = requests.get(f'{BASE_URL}/current').json()
-            if current_song:
-              st.image(current_song['album_art'], use_container_width=True)
-              st.subheader(current_song['track'])
-              st.markdown(f"### {current_song['artist']}")
-            #   st.markdown(refresher(current_song.get("duration", 10)), unsafe_allow_html=True)  # TODO fix refresh
-            else:
-              st.write("Not Playing")
+        st.header("currently playing")
+        if current_song:
+            st.image(current_song["album_art"], use_container_width=True)
+            st.subheader(current_song["track"])
+            st.markdown(f"### {current_song['artist']}")
+        #   st.markdown(refresher(current_song.get("duration", 10)), unsafe_allow_html=True)  # TODO fix refresh
+        else:
+            st.write("Not Playing")
 
-            # st.markdown(refresher(current_song.get("duration", 1000)), unsafe_allow_html=True)
-
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error fetching current song: {e}")
-
-    
     with col2:
         st.header("recent stats")
         # Create tabs
