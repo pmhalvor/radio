@@ -8,7 +8,7 @@ import urllib.parse
 import webbrowser
 
 from dotenv import load_dotenv
-from app_flask import run_flask_app
+import subprocess
 
 # Load environment variables
 load_dotenv()
@@ -32,14 +32,21 @@ def authorize_or_get_token():
     except (FileNotFoundError, json.JSONDecodeError):
         pass  # Proceed to authorization flow
 
-    # Start the Flask app for authorization
-    run_flask_app()
+    # Start the Flask app for authorization as a subprocess
+    flask_process = subprocess.Popen(['python', '-m', 'src.app_flask'])
+    
+    # Ensure the Flask app has time to start
+    time.sleep(2)
 
     code = get_code()
     if code:
         token_info = get_token_first_time(code)
         if token_info:
             return token_info['token']
+
+    # Close the Flask app
+    flask_process.terminate()
+
     return None
 
 def get_code() -> str:
