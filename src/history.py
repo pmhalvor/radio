@@ -3,7 +3,7 @@ import logging
 import pandas as pd 
 import os 
 
-from authorize import get_token 
+from authorize import get_token_info
 from spotify import get_current_song, get_recent_songs, get_tracks
 
 MAX_ID_COUNT=50
@@ -123,8 +123,6 @@ def get_durations(id_list = [], token=None, store=True):
 
     print(f'{len(missing_ids)} new ids to check')
     if len(missing_ids) > 0:
-        # if not token:
-        #     token = get_token()
 
         batches = (len(missing_ids)//MAX_ID_COUNT) + 1
         print(f'Will be executing {batches} API call(s)')
@@ -171,7 +169,7 @@ def run() -> bool:
     logging.info('Running song-history run() function.')
     assert os.path.exists('../../data/history.csv'), 'No history.csv file found.'
 
-    token = get_token()
+    token = get_token_info().get('access_token')
     data = get_recent_songs(token=token)
     print("Recents: ", len(data))
 
@@ -190,7 +188,7 @@ def run() -> bool:
 
 
 def print_current():
-    token = get_token()
+    token = get_token_info()
     data = get_current_song(token=token)
     print(data)
 

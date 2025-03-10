@@ -111,12 +111,12 @@ def get_token_info() -> str:
                 X update .data with new tokens
         X return access token
     '''
-    cache_token_info = get_cache_token_info()
+    token_info = get_cache_token_info()
 
-    if is_token_expired(cache_token_info) or cache_token_info.get("token") in (None, "null"):
-        cache_token_info = refresh_access_token(cache_token_info['refresh_token'])
+    if is_token_expired(token_info) or token_info.get("token") in (None, "null"):
+        token_info = refresh_access_token(token_info['refresh_token'])
 
-    return cache_token_info
+    return token_info
 
 
 def get_cache_token_info() -> dict:
