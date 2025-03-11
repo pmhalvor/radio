@@ -4,6 +4,11 @@ run:
 test:
 	python3 -m pytest tests/
 
-latest:
+pull-latest:
 	docker pull ghcr.io/pmhalvor/radio_streamlit:latest
 	docker compose up -d 
+
+latest:
+	TAG=latest
+	docker compose up -d
+
