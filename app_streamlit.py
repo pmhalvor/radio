@@ -108,7 +108,7 @@ with st.container():
             tab_df["hover_info"] = tab_df["artist"] + " - " + tab_df["track"]
             
             tab_df["duration"] = tab_df["duration"] / 1000
-            tab_df["played_at"] = pd.to_datetime(tab_df["played_at"])
+            tab_df["played_at"] = pd.to_datetime(tab_df["played_at"], format="mixed")
             tab_df["played_at_numeric"] = tab_df["played_at"].astype("int64") // 10**9
             tab_df["played_at_numeric_norm"] = tab_df["played_at_numeric"] - tab_df["played_at_numeric"].min()
             tab_df = tab_df.sort_values("played_at_numeric")
