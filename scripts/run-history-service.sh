@@ -2,6 +2,7 @@
 
 user=pmhalvor
 
+# Note: volume mounts are case sensitive!
 root=/home/${user}
 tokenpath=/radio/.token
 datapath=/data
