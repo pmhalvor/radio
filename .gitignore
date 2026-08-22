@@ -5,7 +5,7 @@
 .tmp*
 .venv/
 .hide/
-
+.cache_code
 
 
 # python stuff

@@ -59,7 +59,7 @@ def get_code() -> str:
     PAYLOAD = {
         'client_id': os.environ.get('SPOTIFY_CLIENT_ID'),
         'scope': 'user-read-currently-playing user-read-recently-played',
-        'redirect_uri': f'http://localhost:{PORT}/callback/authorized',  # define in Spotify Developer Dashboard
+        'redirect_uri': f'http://127.0.0.1:{PORT}/callback/authorized',  # define in Spotify Developer Dashboard
         'response_type': 'code'
     }
     authorization_url = f"{OAUTH_TOKEN_URL}?{urllib.parse.urlencode(PAYLOAD)}"
@@ -78,7 +78,7 @@ def get_code() -> str:
         else:
             # inside streamlit server
             try:
-                response = requests.get(f'http://localhost:{PORT}/callback/code')
+                response = requests.get(f'http://127.0.0.1:{PORT}/callback/code')
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 code = response.json().get('code', None)
             except requests.exceptions.RequestException as e:
@@ -93,7 +93,7 @@ def get_code() -> str:
     try:
         # Use a session for connection pooling
         with requests.Session() as session:
-            response = session.get(f'http://localhost:{PORT}/cache/clear')
+            response = session.get(f'http://127.0.0.1:{PORT}/cache/clear')
             response.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(f"Error clearing cache: {e}")
@@ -152,7 +152,7 @@ def get_token_first_time(code=None) -> dict:
     OAUTH_TOKEN_URL = "https://accounts.spotify.com/api/token"
     PAYLOAD = {
         'grant_type': 'authorization_code',
-        'redirect_uri': f'http://localhost:{PORT}/callback/authorized',  # defined in Spotify Developer Dashboard
+        'redirect_uri': f'http://127.0.0.1:{PORT}/callback/authorized',  # defined in Spotify Developer Dashboard
         'code': code,
     }
     HEADERS = make_headers()
